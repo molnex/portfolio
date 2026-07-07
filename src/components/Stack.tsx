@@ -1,13 +1,13 @@
 import { motion, type Variants } from 'framer-motion';
-import { Code2, Box, Sparkles, Layout, Terminal, Braces } from 'lucide-react';
+import { SiReact, SiTypescript, SiTailwindcss, SiJavascript, SiFramer, SiWordpress } from 'react-icons/si';
 
 const technologies = [
-  { name: "React", category: "Ecosystem", icon: <Box size={20} /> },
-  { name: "TypeScript", category: "Language", icon: <Code2 size={20} /> },
-  { name: "Tailwind CSS", category: "Styling", icon: <Layout size={20} /> },
-  { name: "JavaScript", category: "Language", icon: <Braces size={20} /> },
-  { name: "Framer Motion", category: "Animation", icon: <Sparkles size={20} /> },
-  { name: "WordPress", category: "Commercial", icon: <Terminal size={20} /> },
+  { name: "React", category: "Ecosystem", icon: <SiReact className="w-6 h-6 text-[#61DAFB]" /> },
+  { name: "TypeScript", category: "Language", icon: <SiTypescript className="w-6 h-6 text-[#3178C6]" /> },
+  { name: "Tailwind CSS", category: "Styling", icon: <SiTailwindcss className="w-6 h-6 text-[#38BDF8]" /> },
+  { name: "JavaScript", category: "Language", icon: <SiJavascript className="w-6 h-6 text-[#F7DF1E]" /> },
+  { name: "Framer Motion", category: "Animation", icon: <SiFramer className="w-6 h-6 text-primary" /> },
+  { name: "WordPress", category: "Commercial", icon: <SiWordpress className="w-6 h-6 text-[#21759B]" /> },
 ];
 
 const container: Variants = {
@@ -60,9 +60,12 @@ export default function Stack() {
             <motion.div 
               key={index}
               variants={item}
-              className="group flex flex-col p-6 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+              whileHover={{ y: -4 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              // Прибрали bg-black/5 та border, додали hover background
+              className="group flex flex-col p-6 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-default"
             >
-              <div className="flex items-center gap-3 mb-4 text-primary">
+              <div className="flex items-center gap-3 mb-4">
                 {tech.icon}
                 <span className="text-xs font-mono tracking-wider uppercase text-muted">{tech.category}</span>
               </div>
@@ -70,7 +73,6 @@ export default function Stack() {
             </motion.div>
           ))}
         </motion.div>
-
       </div>
     </section>
   );
