@@ -15,10 +15,10 @@ export default function Controls() {
 
   return (
     <motion.div 
-      initial={{ y: 100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
+      initial={{ y: 100, x: "-50%", opacity: 0 }}
+      animate={{ y: 0, x: "-50%", opacity: 1 }}
       transition={{ duration: 0.8, delay: 1, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center p-1.5 bg-surface/80 backdrop-blur-md border border-black/10 dark:border-white/10 rounded-full shadow-2xl"
+      className="fixed bottom-8 left-1/2 z-50 flex items-center p-1.5 bg-surface/80 backdrop-blur-md border border-black/10 dark:border-white/10 rounded-full shadow-2xl"
     >
       <button 
         onClick={() => setIsDark(!isDark)}

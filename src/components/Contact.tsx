@@ -23,7 +23,7 @@ export default function Contact() {
           className="text-5xl md:text-7xl lg:text-9xl font-display font-bold tracking-tighter text-primary mb-12"
         >
           Let's build <br className="md:hidden" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-muted to-white/30">the future.</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-muted to-primary/30">the future.</span>
         </motion.h2>
 
         <motion.div
@@ -34,9 +34,10 @@ export default function Contact() {
         >
           <a 
             href="mailto:44piemonte@gmail.com" 
-            className="group relative inline-flex items-center gap-4 px-10 py-5 bg-primary text-background rounded-full font-medium text-lg overflow-hidden transition-transform duration-300 hover:scale-[1.02]"
+            className="group relative flex items-center justify-center px-10 h-14 md:h-16 bg-primary text-background rounded-full font-medium text-base md:text-lg overflow-hidden transition-transform duration-300 hover:scale-[1.02]"
           >
-            <span className="relative z-10">Написати мені</span>
+            <span className="relative z-10 leading-none mt-[2px]">Написати мені</span>
+            
             <div className="absolute inset-0 bg-white/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
           </a>
         </motion.div>
@@ -46,7 +47,7 @@ export default function Contact() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 1, delay: 0.4 }}
-          className="mt-32 w-full flex flex-col md:flex-row justify-between items-center gap-6 border-t border-white/10 pt-12"
+          className="mt-32 w-full flex flex-col md:flex-row justify-between items-center gap-6 border-t border-black/10 dark:border-white/10 pt-12"
         >
           <p className="text-muted text-sm">
             © {new Date().getFullYear()} Vasyl Lypka. Всі права захищено.
