@@ -3,12 +3,35 @@ import { motion } from 'framer-motion';
 export default function Hero() {
   const easeOutExpo = [0.16, 1, 0.3, 1] as const;
 
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
-    <section className="relative w-full h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 overflow-hidden">
+    <section id="hero" className="relative w-full h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 overflow-hidden">
       
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] md:w-[50vw] md:h-[50vw] bg-black/[0.03] dark:bg-white/[0.03] rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="relative z-10 flex flex-col items-start uppercase">
+      {/* Бокова навігація зліва - ВИПРАВЛЕНО НАКЛАДАННЯ */}
+      <div className="absolute top-1/2 left-6 md:left-12 -translate-y-1/2 hidden lg:flex flex-col gap-10 z-20 items-center">
+        {['About', 'Stack', 'Work', 'Contact'].map((item, i) => (
+          <a 
+            key={i} 
+            href={`#${item.toLowerCase()}`}
+            onClick={(e) => scrollToSection(e, item.toLowerCase())}
+            style={{ writingMode: 'vertical-rl' }}
+            className="text-sm font-sans font-semibold tracking-[0.2em] uppercase text-primary/60 hover:text-primary transition-colors cursor-pointer select-none rotate-180"
+          >
+            {item}
+          </a>
+        ))}
+      </div>
+
+      <div className="relative z-10 flex flex-col items-start uppercase w-full max-w-7xl mx-auto pl-0 lg:pl-16">
         
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -27,7 +50,7 @@ export default function Hero() {
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             transition={{ duration: 1.2, ease: easeOutExpo, delay: 0.3 }}
-            className="text-[14vw] md:text-[12vw] leading-[0.85] font-display font-bold tracking-tighter text-primary"
+            className="text-[14vw] md:text-[11vw] leading-[0.85] font-display font-bold tracking-tighter text-primary"
           >
             FRONTEND
           </motion.h1>
@@ -35,22 +58,22 @@ export default function Hero() {
         
         <div className="overflow-hidden py-2 flex items-center gap-6 md:gap-12 w-full">
           <motion.h1
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            transition={{ duration: 1.2, ease: easeOutExpo, delay: 0.4 }}
-            className="text-[14vw] md:text-[12vw] leading-[0.85] font-display font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-muted to-black/20 dark:to-white/20"
-          >
-            ENGINEER
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          transition={{ duration: 1.2, ease: easeOutExpo, delay: 0.4 }}
+          className="text-[14vw] md:text-[11vw] leading-[0.85] font-display font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-muted to-primary"
+        >
+         ENGINEER
           </motion.h1>
           
           <motion.div
             initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ duration: 1.5, ease: easeOutExpo, delay: 0.8 }}
-            className="hidden md:flex shrink-0 w-24 h-24 lg:w-32 lg:h-32 rounded-full border border-black/10 dark:border-white/10 items-center justify-center relative"
+            className="hidden md:flex shrink-0 w-20 h-20 lg:w-28 lg:h-28 rounded-full border border-black/10 dark:border-white/10 items-center justify-center relative"
           >
             <div className="absolute inset-0 bg-black/5 dark:bg-white/5 rounded-full animate-pulse blur-md"></div>
-            <span className="text-[10px] lg:text-xs text-muted text-center leading-tight tracking-widest relative z-10">
+            <span className="text-[9px] lg:text-[10px] text-muted text-center leading-tight tracking-widest relative z-10">
               AVAILABLE<br/>FOR WORK
             </span>
           </motion.div>

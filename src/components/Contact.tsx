@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 
 export default function Contact() {
   return (
-    <section className="relative w-full py-32 md:py-48 px-6 md:px-12 lg:px-24 bg-surface flex flex-col items-center justify-center border-t border-white/5">
+    <section id="contact" className="relative w-full pt-32 pb-12 md:pt-48 md:pb-12 px-6 md:px-12 lg:px-24 bg-surface flex flex-col items-center justify-center border-t border-white/5">
       <div className="max-w-7xl w-full flex flex-col items-center text-center">
         
         <motion.p
@@ -23,7 +23,7 @@ export default function Contact() {
           className="text-5xl md:text-7xl lg:text-9xl font-display font-bold tracking-tighter text-primary mb-12"
         >
           Let's build <br className="md:hidden" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-muted to-primary/30">the future.</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-muted to-primary">the future.</span>
         </motion.h2>
 
         <motion.div

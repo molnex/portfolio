@@ -19,7 +19,7 @@ export default function Work() {
   ];
 
   return (
-    <section className="relative w-full py-32 md:py-48 px-6 md:px-12 lg:px-24 bg-background flex justify-center">
+    <section id="work" className="relative w-full py-32 md:py-48 px-6 md:px-12 lg:px-24 bg-background flex justify-center">
       <div className="max-w-7xl w-full flex flex-col">
         
         <motion.div
