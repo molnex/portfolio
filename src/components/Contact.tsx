@@ -37,10 +37,12 @@ export default function Contact() {
           transition={{ duration: 1, delay: 0.2, ease: easeOutExpo }}
         >
           <a 
-            href="mailto:44piemonte@gmail.com" 
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=44piemonte@gmail.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
             className="group relative flex items-center justify-center px-10 h-14 md:h-16 bg-primary text-background rounded-full font-medium text-base md:text-lg overflow-hidden transition-transform duration-300 hover:scale-[1.02]"
           >
-            <span className="relative z-10 leading-none mt-[2px]">{t.contact.btn}</span>
+            <span className="relative z-10 leading-none mt-[2px] tracking-wide">44piemonte@gmail.com</span>
             <div className="absolute inset-0 bg-white/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
           </a>
         </motion.div>
