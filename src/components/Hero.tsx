@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
-import { useLanguage } from '../context/LanguageContext'; // Підключаємо мову
+import { useLanguage } from '../context/LanguageContext'; 
 
 export default function Hero() {
   const easeOutExpo = [0.16, 1, 0.3, 1] as const;
-  const { lang, toggleLang, t } = useLanguage(); // Витягуємо переклади та функцію
+  const { lang, toggleLang, t } = useLanguage(); 
 
   const scrollToSection = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -24,23 +24,37 @@ export default function Hero() {
       id="hero"
       className="relative w-full h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 overflow-hidden"
     >
-      {/* Кнопка перемикання мови - Тільки в Hero! */}
       <motion.button
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         transition={{ duration: 0.8, delay: 0.5, ease: easeOutExpo }}
         onClick={toggleLang}
-        className="absolute top-8 right-6 md:right-12 z-50 flex items-center gap-2 text-xs font-mono font-semibold tracking-[0.2em] uppercase cursor-pointer hover:opacity-70 transition-opacity"
+        className="absolute top-8 right-6 md:right-12 z-50 flex items-center p-1 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 backdrop-blur-md cursor-pointer shadow-sm hover:shadow-md transition-all"
       >
-        <span className={lang === 'uk' ? 'text-primary' : 'text-primary/40'}>UK</span>
-        <span className="text-primary/20">/</span>
-        <span className={lang === 'en' ? 'text-primary' : 'text-primary/40'}>EN</span>
+        <div 
+          className={`px-4 py-2 rounded-full text-xs font-mono font-bold tracking-[0.15em] transition-all duration-300 ${
+            lang === 'uk' 
+              ? 'bg-primary text-background shadow-md' 
+              : 'text-primary/40 hover:text-primary/70'
+          }`}
+        >
+          UK
+        </div>
+        <div 
+          className={`px-4 py-2 rounded-full text-xs font-mono font-bold tracking-[0.15em] transition-all duration-300 ${
+            lang === 'en' 
+              ? 'bg-primary text-background shadow-md' 
+              : 'text-primary/40 hover:text-primary/70'
+          }`}
+        >
+          EN
+        </div>
       </motion.button>
 
-      {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] md:w-[50vw] md:h-[50vw] bg-black/[0.03] dark:bg-white/[0.03] rounded-full blur-[120px] pointer-events-none" />
 
-      {/* Left Navigation */}
       <motion.div
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
@@ -64,7 +78,6 @@ export default function Hero() {
         ))}
       </motion.div>
 
-      {/* Hero Content */}
       <div className="relative z-10 flex flex-col items-start uppercase w-full max-w-7xl mx-auto pl-0 lg:pl-25">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
