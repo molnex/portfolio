@@ -1,19 +1,22 @@
 import { motion } from 'framer-motion';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Work() {
+  const { t } = useLanguage();
+  
   const projects = [
     {
       id: "01",
-      title: "Editorial Portfolio",
-      role: "Frontend Engineer / Designer",
-      description: "Розробка цього преміального портфоліо. Фокус на високопродуктивні анімації, кінематичний скрол та сувору типізацію. Демонстрація глибокого розуміння сучасної екосистеми React та компонентного підходу.",
+      title: t.work.projects[0].title,
+      role: t.work.projects[0].role,
+      description: t.work.projects[0].desc,
       stack: ["React", "TypeScript", "Tailwind", "Framer Motion", "Lenis"]
     },
     {
       id: "02",
-      title: "Commercial CMS Development",
-      role: "WordPress Developer",
-      description: "5 місяців практичного комерційного досвіду. Створення, налаштування та підтримка веб-сайтів. Глибоке розуміння структури веб-сторінок, роботи з плагінами та впровадження кастомних рішень на базі HTML/CSS/JS.",
+      title: t.work.projects[1].title,
+      role: t.work.projects[1].role,
+      description: t.work.projects[1].desc,
       stack: ["WordPress", "HTML/CSS", "JavaScript", "CMS"]
     }
   ];
@@ -30,10 +33,10 @@ export default function Work() {
           className="mb-16 md:mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tighter text-primary">
-            Featured Work.
+            {t.work.title}
           </h2>
           <p className="text-muted mt-4 max-w-2xl text-lg">
-            Моя практика та розробка. Від архітектури сучасних React-додатків до вирішення реальних бізнес-завдань у комерційному середовищі.
+            {t.work.desc}
           </p>
         </motion.div>
 
@@ -58,7 +61,6 @@ export default function Work() {
                 <p className="text-muted text-lg leading-relaxed">
                   {project.description}
                 </p>
-                
                 <div className="flex flex-wrap gap-3">
                   {project.stack.map((tech, i) => (
                     <span 

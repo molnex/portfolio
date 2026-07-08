@@ -39,7 +39,7 @@ export default function Controls() {
       initial={{ y: 100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, delay: 1, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed bottom-8 right-6 md:right-12 z-50 flex items-center gap-1.5 p-1.5 bg-surface/80 backdrop-blur-md border border-black/10 dark:border-white/10 rounded-full shadow-2xl"
+      className="fixed bottom-24 md:bottom-8 right-6 md:right-12 z-50 flex items-center gap-1.5 p-1.5 bg-surface/80 backdrop-blur-md border border-black/10 dark:border-white/10 rounded-full shadow-2xl"
     >
       <button 
         onClick={() => setIsDark(!isDark)}
