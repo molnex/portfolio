@@ -4,18 +4,111 @@
 
 @layer base {
   :root {
-    --background: #f4f4f5;
+    --background: #f7f8fb;
     --surface: #ffffff;
-    --primary: #09090b; 
-    --muted: #52525b; 
+    --primary: #121722;
+    --muted: #536070;
     --accent: #2563eb;
   }
 
   .dark {
-    --background: #0a0a0a;
-    --surface: #111111;
-    --primary: #fafafa;
-    --muted: #a1a1aa;
-    --accent: #3b82f6;
+    --background: #10131a;
+    --surface: #171b24;
+    --primary: #f5f7fb;
+    --muted: #a6afbd;
+    --accent: #7aa2ff;
+  }
+
+  html {
+    background: var(--background);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    background: var(--background);
+    overflow-x: hidden;
+  }
+
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  section[id] {
+    scroll-margin-top: 1rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .hero-backdrop {
+    background-image:
+      radial-gradient(ellipse 45% 55% at 82% 34%, rgb(37 99 235 / 0.11), transparent 70%),
+      linear-gradient(135deg, rgb(37 99 235 / 0.035), transparent 42%);
+  }
+
+  .hero-backdrop-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgb(18 23 34 / 0.08) 18%, rgb(18 23 34 / 0.08) 82%, transparent 100%);
+  }
+
+  .hero-availability {
+    background: rgb(255 255 255 / 0.58);
+    box-shadow: 0 22px 50px rgb(15 23 42 / 0.06);
+  }
+
+  .hero-availability-dot {
+    box-shadow: 0 0 0 4px rgb(37 99 235 / 0.11);
+  }
+
+  .dark .hero-backdrop {
+    background-image:
+      radial-gradient(ellipse 48% 58% at 82% 34%, rgb(91 133 255 / 0.17), transparent 70%),
+      linear-gradient(135deg, rgb(91 133 255 / 0.06), transparent 45%);
+  }
+
+  .dark .hero-backdrop-line {
+    background: linear-gradient(90deg, transparent 0%, rgb(245 247 251 / 0.09) 18%, rgb(245 247 251 / 0.09) 82%, transparent 100%);
+  }
+
+  .dark .hero-availability {
+    background: rgb(23 27 36 / 0.74);
+    box-shadow: 0 22px 50px rgb(0 0 0 / 0.19);
+  }
+
+  .dark .hero-availability-dot {
+    box-shadow: 0 0 0 4px rgb(122 162 255 / 0.14);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-availability-dot {
+      animation: hero-availability-pulse 2.4s ease-in-out infinite;
+    }
+  }
+
+  @keyframes hero-availability-pulse {
+    50% {
+      transform: scale(1.22);
+    }
   }
 }

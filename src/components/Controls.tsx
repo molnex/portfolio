@@ -3,7 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Moon, ArrowUp } from 'lucide-react';
 
 export default function Controls() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    const savedTheme = localStorage.getItem('portfolio-theme');
+    if (savedTheme) return savedTheme === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
@@ -12,18 +16,21 @@ export default function Controls() {
     } else {
       document.documentElement.classList.remove('dark');
     }
+    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+    localStorage.setItem('portfolio-theme', isDark ? 'dark' : 'light');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute(
+      'content',
+      isDark ? '#10131a' : '#f7f8fb',
+    );
   }, [isDark]);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setShowScrollTop(true);
-      } else {
-        setShowScrollTop(false);
-      }
+      setShowScrollTop(window.scrollY > 300);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -42,9 +49,11 @@ export default function Controls() {
       className="fixed bottom-24 md:bottom-8 right-6 md:right-12 z-50 flex items-center gap-1.5 p-1.5 bg-surface/80 backdrop-blur-md border border-black/10 dark:border-white/10 rounded-full shadow-2xl"
     >
       <button 
+        type="button"
         onClick={() => setIsDark(!isDark)}
         className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-primary"
-        aria-label="Toggle Theme"
+        aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+        aria-pressed={isDark}
       >
         {isDark ? <Sun size={20} /> : <Moon size={20} />}
       </button>
@@ -59,6 +68,7 @@ export default function Controls() {
               className="w-[1px] h-6 bg-black/10 dark:bg-white/10"
             />
             <motion.button 
+              type="button"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0, opacity: 0 }}

@@ -1,3 +1,4 @@
+import { MotionConfig } from 'framer-motion';
 import Hero from './components/Hero';
 import About from './components/About';
 import Stack from './components/Stack';
@@ -8,15 +9,17 @@ import { LanguageProvider } from './context/LanguageContext';
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <main>
-        <Controls />
-        <Hero />
-        <About />
-        <Stack />
-        <Work />
-        <Contact />
-      </main>
-    </LanguageProvider>
+    <MotionConfig reducedMotion="user">
+      <LanguageProvider>
+        <main>
+          <Controls />
+          <Hero />
+          <About />
+          <Stack />
+          <Work />
+          <Contact />
+        </main>
+      </LanguageProvider>
+    </MotionConfig>
   );
 }

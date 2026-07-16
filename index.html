@@ -1,10 +1,29 @@
 <!doctype html>
-<html lang="en">
+<html lang="uk">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>portfolio-editorial</title>
+    <meta name="description" content="Портфоліо Василя Липки — Frontend Engineer, React і TypeScript розробник." />
+    <meta name="theme-color" content="#f7f8fb" />
+    <script>
+      (() => {
+        try {
+          const savedTheme = localStorage.getItem('portfolio-theme');
+          const isDark = savedTheme
+            ? savedTheme === 'dark'
+            : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.classList.toggle('dark', isDark);
+          document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+
+          const savedLanguage = localStorage.getItem('portfolio-language');
+          if (savedLanguage === 'en') document.documentElement.lang = 'en';
+        } catch {
+          // The portfolio remains fully functional if browser storage is unavailable.
+        }
+      })();
+    </script>
+    <title>Василь Липка — Frontend Engineer</title>
   </head>
   <body class="bg-background text-primary antialiased selection:bg-primary selection:text-background">
     <div id="root"></div>

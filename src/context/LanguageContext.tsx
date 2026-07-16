@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
 const translations = {
   uk: {
@@ -150,21 +150,27 @@ const translations = {
 type Language = 'uk' | 'en';
 type LanguageContextType = {
   lang: Language;
-  toggleLang: () => void;
+  setLanguage: (language: Language) => void;
   t: typeof translations.uk;
 };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
-  const [lang, setLang] = useState<Language>('uk');
+const getStoredLanguage = (): Language => {
+  const storedLanguage = localStorage.getItem('portfolio-language');
+  return storedLanguage === 'en' ? 'en' : 'uk';
+};
 
-  const toggleLang = () => {
-    setLang(prev => prev === 'uk' ? 'en' : 'uk');
-  };
+export const LanguageProvider = ({ children }: { children: ReactNode }) => {
+  const [lang, setLanguage] = useState<Language>(getStoredLanguage);
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    localStorage.setItem('portfolio-language', lang);
+  }, [lang]);
 
   return (
-    <LanguageContext.Provider value={{ lang, toggleLang, t: translations[lang] }}>
+    <LanguageContext.Provider value={{ lang, setLanguage, t: translations[lang] }}>
       {children}
     </LanguageContext.Provider>
   );

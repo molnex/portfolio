@@ -1,84 +1,84 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
+
+const easeOutExpo = [0.16, 1, 0.3, 1] as const;
 
 export default function Work() {
   const { t } = useLanguage();
-  
+  const reduceMotion = useReducedMotion();
   const projects = [
     {
-      id: "01",
+      id: '01',
       title: t.work.projects[0].title,
       role: t.work.projects[0].role,
       description: t.work.projects[0].desc,
-      stack: ["React", "TypeScript", "Tailwind", "Framer Motion", "Lenis"]
+      stack: ['React', 'TypeScript', 'Tailwind', 'Framer Motion', 'Lenis'],
     },
     {
-      id: "02",
+      id: '02',
       title: t.work.projects[1].title,
       role: t.work.projects[1].role,
       description: t.work.projects[1].desc,
-      stack: ["WordPress", "HTML/CSS", "JavaScript", "CMS"]
-    }
+      stack: ['WordPress', 'HTML/CSS', 'JavaScript', 'CMS'],
+    },
   ];
 
   return (
-    <section id="work" className="relative w-full py-32 md:py-48 px-6 md:px-12 lg:px-24 bg-background flex justify-center">
-      <div className="max-w-7xl w-full flex flex-col">
-        
+    <section id="work" className="w-full border-t border-primary/10 bg-surface px-5 py-28 sm:px-8 md:py-36 lg:px-12">
+      <div className="mx-auto max-w-[76rem]">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-16 md:mb-24"
+          viewport={{ once: true, margin: '-90px' }}
+          transition={{ duration: reduceMotion ? 0.01 : 0.68, ease: easeOutExpo }}
+          className="grid gap-8 border-b border-primary/10 pb-11 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,0.72fr)] lg:items-end lg:gap-16"
         >
-          <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tighter text-primary">
-            {t.work.title}
-          </h2>
-          <p className="text-muted mt-4 max-w-2xl text-lg">
-            {t.work.desc}
-          </p>
+          <div>
+            <span className="inline-flex items-center gap-3 text-sm font-medium text-muted">
+              <span className="h-px w-8 bg-accent" aria-hidden="true" />
+              {t.nav[2].label}
+            </span>
+            <h2 className="mt-7 max-w-3xl font-display text-[clamp(2.8rem,5.4vw,5.65rem)] font-semibold leading-[0.91] tracking-[-0.075em] text-primary">
+              {t.work.title}
+            </h2>
+          </div>
+          <p className="max-w-xl text-sm leading-7 text-muted sm:text-base">{t.work.desc}</p>
         </motion.div>
 
-        <div className="flex flex-col">
+        <div>
           {projects.map((project, index) => (
-            <motion.div
+            <motion.article
               key={project.id}
-              initial={{ opacity: 0, y: 30 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: index * 0.1 }}
-              className="group border-t border-white/10 py-10 md:py-16 flex flex-col md:flex-row justify-between gap-8 md:gap-16 relative"
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: reduceMotion ? 0.01 : 0.66, delay: reduceMotion ? 0 : index * 0.09, ease: easeOutExpo }}
+              className="group relative grid gap-6 border-b border-primary/10 py-10 sm:py-12 lg:grid-cols-[4rem_minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-8 lg:py-16"
             >
-              <div className="md:w-1/3 flex flex-col gap-2">
-                <span className="text-xs font-mono text-muted/50 tracking-widest">{project.id}</span>
-                <h3 className="text-3xl md:text-4xl font-display font-medium text-primary group-hover:text-accent transition-colors duration-500">
+              <span className="text-sm font-medium text-muted">{project.id}</span>
+              <div>
+                <h3 className="max-w-md font-display text-[clamp(2rem,3.5vw,3.4rem)] font-semibold leading-[0.96] tracking-[-0.065em] text-primary transition-colors duration-300 group-hover:text-accent">
                   {project.title}
                 </h3>
+                <p className="mt-4 text-sm font-medium text-muted">{project.role}</p>
               </div>
-
-              <div className="md:w-2/3 flex flex-col gap-6">
-                <p className="text-muted text-lg leading-relaxed">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  {project.stack.map((tech, i) => (
-                    <span 
-                      key={i} 
-                      className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-mono text-primary/80 uppercase tracking-wider"
-                    >
-                      {tech}
-                    </span>
+              <div className="flex flex-col justify-between gap-8">
+                <p className="max-w-xl text-sm leading-7 text-muted sm:text-base">{project.description}</p>
+                <ul className="flex flex-wrap gap-x-4 gap-y-2 border-t border-primary/10 pt-4 text-xs font-medium text-primary/72">
+                  {project.stack.map((technology) => (
+                    <li key={technology} className="before:mr-2 before:text-accent before:content-['•']">
+                      {technology}
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
-
-              <div className="absolute bottom-0 left-0 w-full h-[1px] bg-accent scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-700 ease-out"></div>
-            </motion.div>
+              <span
+                className="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-100"
+                aria-hidden="true"
+              />
+            </motion.article>
           ))}
-          <div className="border-t border-white/10"></div>
         </div>
-
       </div>
     </section>
   );

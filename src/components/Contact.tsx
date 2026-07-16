@@ -1,70 +1,69 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
+const easeOutExpo = [0.16, 1, 0.3, 1] as const;
+
 export default function Contact() {
-  const easeOutExpo = [0.16, 1, 0.3, 1] as const;
   const { t } = useLanguage();
+  const reduceMotion = useReducedMotion();
 
   return (
-    <section id="contact" className="relative w-full pt-32 pb-12 md:pt-48 md:pb-12 px-6 md:px-12 lg:px-24 bg-surface flex flex-col items-center justify-center border-t border-white/5">
-      <div className="max-w-7xl w-full flex flex-col items-center text-center">
-        
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 1 }}
-          className="text-muted tracking-[0.3em] uppercase text-xs font-mono mb-8"
-        >
-          {t.contact.next}
-        </motion.p>
-
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 1, delay: 0.1, ease: easeOutExpo }}
-          className="text-5xl md:text-7xl lg:text-9xl font-display font-bold tracking-tighter text-primary mb-12"
-        >
-          {t.contact.titleLine1} <br className="md:hidden" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-muted to-primary">{t.contact.titleLine2}</span>
-        </motion.h2>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 1, delay: 0.2, ease: easeOutExpo }}
-        >
-          <a 
-            href="https://mail.google.com/mail/?view=cm&fs=1&to=44piemonte@gmail.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="group relative flex items-center justify-center px-10 h-14 md:h-16 bg-primary text-background rounded-full font-medium text-base md:text-lg overflow-hidden transition-transform duration-300 hover:scale-[1.02]"
+    <section id="contact" className="w-full border-t border-primary/10 bg-surface px-5 py-28 sm:px-8 md:py-36 lg:px-12">
+      <div className="mx-auto max-w-[76rem]">
+        <div className="grid gap-12 border-b border-primary/10 pb-16 md:grid-cols-[minmax(0,1.1fr)_minmax(15rem,0.9fr)] md:items-end md:gap-12 lg:gap-20">
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: reduceMotion ? 0.01 : 0.7, ease: easeOutExpo }}
           >
-            <span className="relative z-10 leading-none mt-[2px] tracking-wide">44piemonte@gmail.com</span>
-            <div className="absolute inset-0 bg-white/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
-          </a>
-        </motion.div>
+            <span className="inline-flex items-center gap-3 text-sm font-medium text-muted">
+              <span className="h-px w-8 bg-accent" aria-hidden="true" />
+              {t.contact.next}
+            </span>
+            <h2 className="mt-7 max-w-3xl font-display text-5xl font-semibold leading-[0.9] tracking-[-0.075em] text-primary sm:text-6xl lg:text-8xl">
+              {t.contact.titleLine1}
+              <br />
+              <span className="text-primary/58">{t.contact.titleLine2}</span>
+            </h2>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 1, delay: 0.4 }}
-          className="mt-32 w-full flex flex-col md:flex-row justify-between items-center gap-6 border-t border-black/10 dark:border-white/10 pt-12"
-        >
-          <p className="text-muted text-sm">
-            © {new Date().getFullYear()} {t.contact.copyright}
-          </p>
-          
-          <div className="flex gap-8 text-sm font-medium">
-            <a href="https://t.me/odysseyyocker" target="_blank" rel="noreferrer" className="text-muted hover:text-primary transition-colors">Telegram</a>
-            <a href="https://github.com/molnex" className="text-muted hover:text-primary transition-colors">GitHub</a>
-            <a href="https://www.linkedin.com/in/%D0%B2%D0%B0%D1%81%D0%B8%D0%BB%D1%8C-%D0%BB%D0%B8%D0%BF%D0%BA%D0%B0-17175b301/" className="text-muted hover:text-primary transition-colors">LinkedIn</a>
-          </div>
-        </motion.div>
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: reduceMotion ? 0.01 : 0.68, delay: reduceMotion ? 0 : 0.1, ease: easeOutExpo }}
+            className="border-t border-primary/10 pt-6 md:pb-1"
+          >
+            <a
+              href="mailto:44piemonte@gmail.com"
+              className="group block break-words text-2xl font-medium tracking-[-0.045em] text-primary transition-colors hover:text-accent sm:text-3xl"
+            >
+              44piemonte@gmail.com
+              <ArrowUpRight className="ml-2 inline-block transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" size={20} aria-hidden="true" />
+            </a>
+            <a
+              href="mailto:44piemonte@gmail.com"
+              aria-label={`${t.contact.btn}: 44piemonte@gmail.com`}
+              className="mt-8 inline-flex min-h-12 items-center gap-3 rounded-full bg-primary px-5 text-sm font-semibold text-background transition-transform duration-200 hover:-translate-y-0.5 focus-visible:-translate-y-0.5"
+            >
+              {t.contact.btn}
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </a>
+          </motion.div>
+        </div>
 
+        <footer className="flex flex-col gap-7 py-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs leading-relaxed text-muted">© {new Date().getFullYear()} {t.contact.copyright}</p>
+          <nav className="flex flex-wrap items-center text-sm font-medium text-muted" aria-label="Social links">
+            <a href="https://t.me/odysseyyocker" target="_blank" rel="noreferrer" className="transition-colors hover:text-primary">Telegram</a>
+            <span className="px-3 text-primary/35" aria-hidden="true">·</span>
+            <a href="https://github.com/molnex" target="_blank" rel="noreferrer" className="transition-colors hover:text-primary">GitHub</a>
+            <span className="px-3 text-primary/35" aria-hidden="true">·</span>
+            <a href="https://www.linkedin.com/in/%D0%B2%D0%B0%D1%81%D0%B8%D0%BB%D1%8C-%D0%BB%D0%B8%D0%BF%D0%BA%D0%B0-17175b301/" target="_blank" rel="noreferrer" className="transition-colors hover:text-primary">LinkedIn</a>
+          </nav>
+        </footer>
       </div>
     </section>
   );
