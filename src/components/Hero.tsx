@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ArrowDown, ArrowUpRight } from 'lucide-react';
-import type { MouseEvent } from 'react';
+import { ArrowDown, ArrowUpRight, Menu, X } from 'lucide-react';
+import { useEffect, useState, type MouseEvent } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
 const easeOutExpo = [0.16, 1, 0.3, 1] as const;
@@ -9,6 +9,11 @@ type SectionLinkProps = {
   id: string;
   label: string;
   onNavigate: (event: MouseEvent<HTMLAnchorElement>, id: string) => void;
+};
+
+type MobileSectionLinkProps = SectionLinkProps & {
+  index: number;
+  reduceMotion: boolean | null;
 };
 
 function SectionLink({ id, label, onNavigate }: SectionLinkProps) {
@@ -23,16 +28,55 @@ function SectionLink({ id, label, onNavigate }: SectionLinkProps) {
   );
 }
 
+function MobileSectionLink({ id, label, index, onNavigate, reduceMotion }: MobileSectionLinkProps) {
+  return (
+    <motion.a
+      href={`#${id}`}
+      onClick={(event) => onNavigate(event, id)}
+      initial={reduceMotion ? false : { opacity: 0, x: -12 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: reduceMotion ? 0.01 : 0.35, delay: reduceMotion ? 0 : 0.04 * index, ease: easeOutExpo }}
+      className="group grid grid-cols-[2rem_minmax(0,1fr)_1.5rem] items-center gap-3 rounded-xl px-4 py-4 transition-colors duration-200 hover:bg-primary/[0.045] focus-visible:bg-primary/[0.045]"
+    >
+      <span className="text-xs font-medium text-muted/70">{String(index + 1).padStart(2, '0')}</span>
+      <span className="font-display text-xl font-semibold tracking-[-0.045em] text-primary">{label}</span>
+      <ArrowUpRight
+        size={18}
+        strokeWidth={1.8}
+        className="justify-self-end text-muted transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent"
+        aria-hidden="true"
+      />
+    </motion.a>
+  );
+}
+
 export default function Hero() {
   const { lang, setLanguage, t } = useLanguage();
   const reduceMotion = useReducedMotion();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isMenuOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isMenuOpen]);
 
   const scrollToSection = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
     event.preventDefault();
-    document.getElementById(id)?.scrollIntoView({
+      document.getElementById(id)?.scrollIntoView({
       behavior: reduceMotion ? 'auto' : 'smooth',
       block: 'start',
     });
+  };
+
+  const scrollFromMenu = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
+    setIsMenuOpen(false);
+    scrollToSection(event, id);
   };
 
   const reveal = (delay: number) => ({
@@ -47,7 +91,7 @@ export default function Hero() {
       className="relative isolate flex min-h-[min(52rem,100svh)] w-full overflow-hidden bg-background px-5 sm:px-8 lg:px-12"
     >
       <div className="hero-backdrop pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
-      <div className="hero-backdrop-line pointer-events-none absolute inset-x-0 top-[7.4rem] -z-10" aria-hidden="true" />
+      <div className="hero-backdrop-line pointer-events-none absolute inset-x-0 top-[5.4rem] -z-10 sm:top-[5.75rem]" aria-hidden="true" />
 
       <header className="absolute left-0 top-0 z-20 w-full px-5 pt-5 sm:px-8 sm:pt-7 lg:px-12">
         <div className="mx-auto flex max-w-[76rem] items-center justify-between gap-4">
@@ -66,45 +110,76 @@ export default function Hero() {
             ))}
           </nav>
 
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: reduceMotion ? 0.01 : 0.55, delay: 0.12, ease: easeOutExpo }}
-            className="inline-flex shrink-0 items-center rounded-full border border-primary/12 bg-surface/85 p-1 shadow-[0_10px_30px_rgb(15_23_42_/_0.06)] backdrop-blur-sm"
-            role="group"
-            aria-label="Language selector"
-          >
+          <div className="flex shrink-0 items-center gap-2">
             <button
               type="button"
-              onClick={() => setLanguage('uk')}
-              aria-pressed={lang === 'uk'}
-              className={`min-h-9 rounded-full px-3 text-[11px] font-semibold transition-colors duration-200 ${
-                lang === 'uk' ? 'bg-primary text-background' : 'text-primary/60 hover:text-primary'
-              }`}
+              onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/12 bg-surface text-primary transition-colors hover:bg-primary/[0.04] lg:hidden"
+              aria-label={lang === 'uk' ? (isMenuOpen ? 'Закрити меню' : 'Відкрити меню') : (isMenuOpen ? 'Close menu' : 'Open menu')}
+              aria-controls="mobile-navigation"
+              aria-expanded={isMenuOpen}
             >
-              UK
+              {isMenuOpen ? <X size={19} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
             </button>
-            <button
-              type="button"
-              onClick={() => setLanguage('en')}
-              aria-pressed={lang === 'en'}
-              className={`min-h-9 rounded-full px-3 text-[11px] font-semibold transition-colors duration-200 ${
-                lang === 'en' ? 'bg-primary text-background' : 'text-primary/60 hover:text-primary'
-              }`}
+
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reduceMotion ? 0.01 : 0.55, delay: 0.12, ease: easeOutExpo }}
+              className="inline-flex items-center rounded-full border border-primary/12 bg-surface p-1 shadow-[0_10px_30px_rgb(15_23_42_/_0.06)]"
+              role="group"
+              aria-label="Language selector"
             >
-              EN
-            </button>
-          </motion.div>
+              <button
+                type="button"
+                onClick={() => setLanguage('uk')}
+                aria-pressed={lang === 'uk'}
+                className={`min-h-9 rounded-full px-3 text-[11px] font-semibold transition-colors duration-200 ${
+                  lang === 'uk' ? 'bg-primary text-background' : 'text-primary/60 hover:text-primary'
+                }`}
+              >
+                UK
+              </button>
+              <button
+                type="button"
+                onClick={() => setLanguage('en')}
+                aria-pressed={lang === 'en'}
+                className={`min-h-9 rounded-full px-3 text-[11px] font-semibold transition-colors duration-200 ${
+                  lang === 'en' ? 'bg-primary text-background' : 'text-primary/60 hover:text-primary'
+                }`}
+              >
+                EN
+              </button>
+            </motion.div>
+          </div>
         </div>
 
-        <nav className="mx-auto mt-5 grid max-w-[76rem] grid-cols-2 gap-x-5 gap-y-2 border-t border-primary/10 pt-4 lg:hidden" aria-label="Primary navigation">
-          {t.nav.map((item) => (
-            <SectionLink key={item.id} {...item} onNavigate={scrollToSection} />
-          ))}
-        </nav>
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -14, scale: 0.985 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -10, scale: 0.985 }}
+              transition={{ duration: reduceMotion ? 0.01 : 0.28, ease: easeOutExpo }}
+              className="mx-auto mt-4 max-w-[76rem] rounded-2xl border border-primary/10 bg-surface p-2 shadow-[0_20px_55px_rgb(15_23_42_/_0.12)] lg:hidden"
+            >
+              <nav id="mobile-navigation" className="divide-y divide-primary/10" aria-label="Primary navigation">
+                {t.nav.map((item, index) => (
+                  <MobileSectionLink
+                    key={item.id}
+                    {...item}
+                    index={index}
+                    reduceMotion={reduceMotion}
+                    onNavigate={scrollFromMenu}
+                  />
+                ))}
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
-      <div className="relative z-10 mx-auto grid w-full max-w-[76rem] grid-cols-1 items-end gap-10 pb-16 pt-48 sm:gap-12 sm:pb-20 lg:grid-cols-[minmax(0,1fr)_15.5rem] lg:gap-16 lg:pb-24 lg:pt-32">
+      <div className="relative z-10 mx-auto grid w-full max-w-[76rem] grid-cols-1 items-end gap-10 pb-16 pt-32 sm:gap-12 sm:pb-20 sm:pt-36 lg:grid-cols-[minmax(0,1fr)_15.5rem] lg:gap-16 lg:pb-24 lg:pt-32">
         <div className="min-w-0">
           <motion.p
             {...reveal(0.16)}
