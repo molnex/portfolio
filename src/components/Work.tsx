@@ -1,17 +1,22 @@
 import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'framer-motion';
-import { ArrowUpRight, Image as ImageIcon } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { copy } from '../content/copy';
 import { projects, type Project } from '../data/projects';
 import { fadeUp, maskLine, sectionViewport, stagger } from '../lib/motion';
 
-function ProjectVisual({ project, language, imageNeeded, imageNote, visualY }: { project: Project; language: 'uk' | 'en'; imageNeeded: string; imageNote: string; visualY: number | MotionValue<number> }) {
+function ProjectVisual({ project, language, visualY }: { project: Project; language: 'uk' | 'en'; visualY: number | MotionValue<number> }) {
   const previewCopy = copy[language];
-  if (project.kind === 'cms') return <motion.figure className="project-visual cms-visual" style={{ y: visualY }}>
-    <div className="cms-cross one" aria-hidden="true" /><div className="cms-cross two" aria-hidden="true" />
-    <div className="cms-placeholder"><ImageIcon size={30} strokeWidth={1.2} aria-hidden="true" /><strong>{imageNeeded}</strong><span>{imageNote}</span></div>
-    <figcaption className="mono visual-caption">WORDPRESS / CMS / HTML / CSS / JS</figcaption>
+  if (project.kind === 'cms') return <motion.figure className="project-visual cms-visual" style={{ y: visualY }} aria-label={previewCopy.work.cms.ariaLabel}>
+    <div className="cms-art" aria-hidden="true">
+      <div className="cms-topline mono"><span>{previewCopy.work.cms.eyebrow}</span><span>02 / 02</span></div>
+      <div className="cms-middle">
+        <div className="cms-duration"><strong>08</strong><span className="mono">{previewCopy.work.cms.months}</span></div>
+        <ol className="cms-stages">{previewCopy.work.cms.stages.map((stage, index) => <li key={stage}><span className="mono">0{index + 1}</span><strong>{stage}</strong></li>)}</ol>
+      </div>
+      <div className="cms-bottomline mono"><span>WORDPRESS / CMS</span><span>HTML · CSS · JS</span></div>
+    </div>
   </motion.figure>;
 
   return <motion.figure className="project-visual portfolio-visual" style={{ y: visualY }} aria-label={language === 'uk' ? 'Стилізований preview цього портфоліо' : 'Stylized preview of this portfolio'}>
@@ -31,7 +36,7 @@ function ProjectCard({ project, language, t }: { project: Project; language: 'uk
   const visualY = useTransform(scrollYProgress, [0, 1], [16, -16]);
 
   return <motion.article ref={cardRef} className={`project project-${project.kind}`} initial={reduced ? false : 'hidden'} whileInView="visible" viewport={sectionViewport} variants={fadeUp}>
-    <ProjectVisual project={project} language={language} imageNeeded={t.work.imageNeeded} imageNote={t.work.imageNote} visualY={reduced ? 0 : visualY} />
+    <ProjectVisual project={project} language={language} visualY={reduced ? 0 : visualY} />
     <div className="project-content">
       <div className="project-kicker mono"><span>{project.number} / 02</span><span>{project.role[language]}</span></div>
       <h3>{project.title[language]}</h3>

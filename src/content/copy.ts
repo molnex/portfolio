@@ -8,7 +8,7 @@ type SiteCopy = {
   hero: { line1: string; line2: string; intro: string; body: string; viewWork: string; contact: string; scroll: string; availability: string; craft: string };
   about: { label: string; title: string; lead: string; detail: string; facts: { label: string; title: string; body: string }[] };
   stack: { label: string; title: string; intro: string; categories: Record<'ecosystem' | 'language' | 'styling' | 'animation' | 'commercial', string> };
-  work: { label: string; title: string; intro: string; live: string; source: string; imageNeeded: string; imageNote: string };
+  work: { label: string; title: string; intro: string; live: string; source: string; cms: { eyebrow: string; months: string; stages: [string, string, string]; ariaLabel: string } };
   contact: { label: string; title1: string; title2: string; intro: string; emailAction: string; copyright: string; backTop: string; socialLabel: string };
 };
 
@@ -35,7 +35,7 @@ export const copy: Record<Language, SiteCopy> = {
       ],
     },
     stack: { label: '02 / Інструменти', title: 'Технології в роботі.', intro: 'Мій робочий набір для побудови адаптивних інтерфейсів — від структури до руху.', categories: { ecosystem: 'Екосистема', language: 'Мова', styling: 'Стилі', animation: 'Анімація', commercial: 'CMS' } },
-    work: { label: '03 / Роботи', title: 'Вибрані проєкти.', intro: 'Особистий продукт і комерційна практика. Кожна робота — нагода поєднати увагу до деталей із чистою реалізацією.', live: 'Відкрити сайт', source: 'Переглянути код', imageNeeded: 'Зображення проєкту', imageNote: 'Додайте власний скриншот або дозволений до публікації кейс.' },
+    work: { label: '03 / Роботи', title: 'Вибрані проєкти.', intro: 'Особистий продукт і комерційна практика. Кожна робота — нагода поєднати увагу до деталей із чистою реалізацією.', live: 'Відкрити сайт', source: 'Переглянути код', cms: { eyebrow: 'Комерційна практика', months: 'місяців', stages: ['Створення', 'Налаштування', 'Підтримка'], ariaLabel: '8 місяців комерційної WordPress-практики: створення, налаштування та підтримка сайтів.' } },
     contact: { label: '04 / Контакт', title1: 'Є ідея?', title2: 'Поговорімо.', intro: 'Відкритий до frontend-ролей і цікавих цифрових продуктів.', emailAction: 'Написати листа', copyright: 'Василь Липка. Всі права захищено.', backTop: 'На початок', socialLabel: 'Соціальні мережі' },
   },
   en: {
@@ -60,7 +60,7 @@ export const copy: Record<Language, SiteCopy> = {
       ],
     },
     stack: { label: '02 / Toolkit', title: 'Tools of the trade.', intro: 'The tools I use to build responsive interfaces, from structure to motion.', categories: { ecosystem: 'Ecosystem', language: 'Language', styling: 'Styling', animation: 'Motion', commercial: 'CMS' } },
-    work: { label: '03 / Work', title: 'Selected work.', intro: 'A personal product and commercial practice. Each piece is a chance to pair careful details with clean implementation.', live: 'Visit website', source: 'View source', imageNeeded: 'Project imagery', imageNote: 'Add your own screenshot or a case study approved for publication.' },
+    work: { label: '03 / Work', title: 'Selected work.', intro: 'A personal product and commercial practice. Each piece is a chance to pair careful details with clean implementation.', live: 'Visit website', source: 'View source', cms: { eyebrow: 'Commercial practice', months: 'months', stages: ['Build', 'Configure', 'Maintain'], ariaLabel: '8 months of commercial WordPress practice: building, configuring and maintaining websites.' } },
     contact: { label: '04 / Contact', title1: 'Have an idea?', title2: "Let's talk.", intro: 'Open to frontend roles and thoughtful digital products.', emailAction: 'Send an email', copyright: 'Vasyl Lypka. All rights reserved.', backTop: 'Back to top', socialLabel: 'Social links' },
   },
 };

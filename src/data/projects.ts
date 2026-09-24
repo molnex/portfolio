@@ -29,8 +29,8 @@ export const projects: Project[] = [
     title: { uk: 'Комерційна CMS-розробка', en: 'Commercial CMS development' },
     role: { uk: 'WordPress-розробник', en: 'WordPress developer' },
     description: {
-      uk: 'Пʼять місяців комерційної практики: створення, налаштування й підтримка сайтів на WordPress, робота з HTML, CSS та JavaScript.',
-      en: 'Five months of commercial practice: building, configuring and maintaining WordPress sites, working with HTML, CSS and JavaScript.',
+      uk: 'Вісім місяців комерційної практики: створення, налаштування й підтримка сайтів на WordPress, робота з HTML, CSS та JavaScript.',
+      en: 'Eight months of commercial practice: building, configuring and maintaining WordPress sites, working with HTML, CSS and JavaScript.',
     },
     technologies: ['WordPress', 'HTML', 'CSS', 'JavaScript'],
   },
