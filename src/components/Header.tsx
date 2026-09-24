@@ -14,14 +14,31 @@ export default function Header() {
   const menuPanel = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (visible) setActive(visible.target.id === 'hero' ? null : visible.target.id as SectionId);
-    }, { rootMargin: '-25% 0px -50% 0px', threshold: [0, 0.2, 0.5] });
-    const hero = document.getElementById('hero');
-    if (hero) observer.observe(hero);
-    t.nav.forEach(({ id }) => { const section = document.getElementById(id); if (section) observer.observe(section); });
-    return () => observer.disconnect();
+    const sections = ['hero', ...t.nav.map(({ id }) => id)]
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => section !== null);
+    const updateActive = () => {
+      const marker = Math.max(window.innerHeight * 0.3, 110);
+      const current = sections.find((section) => {
+        const { top, bottom } = section.getBoundingClientRect();
+        return top <= marker && bottom > marker;
+      });
+      const next = current && current.id !== 'hero' ? current.id as SectionId : null;
+      setActive((previous) => previous === next ? previous : next);
+    };
+    let frame = 0;
+    const scheduleUpdate = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => { frame = 0; updateActive(); });
+    };
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+    updateActive();
+    return () => {
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
+      cancelAnimationFrame(frame);
+    };
   }, [t.nav]);
 
   useEffect(() => {
