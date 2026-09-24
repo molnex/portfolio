@@ -1,75 +1,41 @@
-# React + TypeScript + Vite
+# Vasyl Lypka — Frontend Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Персональне портфоліо Василя Липки на React 19, TypeScript і Vite. Інтерфейс має українську та англійську мови, світлу й темну теми, адаптивну навігацію та анімації з підтримкою `prefers-reduced-motion`.
 
-Currently, two official plugins are available:
+## Локальний запуск
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Потрібен Node.js, сумісний з Vite 8 (Node.js 20.19+ або 22.12+).
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```powershell
+cd D:\portfolio\portfolio-editorial
+npm ci
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Відкрийте адресу, яку покаже Vite (зазвичай `http://localhost:5173/`).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Перевірки
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```powershell
+npm run lint
+npm run build
+npm audit
 ```
+
+`npm run build` виконує перевірку TypeScript і збирає сайт у `dist/`. Для локальної перевірки production-збірки: `npm run preview`.
+
+## Структура
+
+- `src/content/copy.ts` — тексти UK/EN.
+- `src/data/projects.ts` — типізовані дані робіт і їхні посилання.
+- `src/data/site.ts` — підтверджені контакти та URL портфоліо.
+- `src/lib/motion.ts` — спільні параметри анімації.
+- `src/components/` — секції, навігація та перемикачі.
+- `src/index.css` — токени тем, типографіка та адаптивна дизайн-система.
+- `public/social-preview.png` — зображення для Open Graph.
+
+## Оновлення контенту
+
+Замість візуального слота для WordPress-практики в `src/components/Work.tsx` додайте власний скриншот або кейс, який можна публікувати. Публічних посилань на ці проєкти в початковому репозиторії не було, тому вони не додані. Особисті факти та контакти змінюйте у `src/content/copy.ts` і `src/data/site.ts`.
+
+Сайт використовує локально встановлені open-source шрифти Oswald, Manrope й IBM Plex Mono. URL наявного розгортання Vercel вказано в метаданих Open Graph та `src/data/site.ts`.

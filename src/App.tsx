@@ -4,15 +4,15 @@ import About from './components/About';
 import Stack from './components/Stack';
 import Work from './components/Work';
 import Contact from './components/Contact';
-import Controls from './components/Controls';
+import Header from './components/Header';
 import { LanguageProvider } from './context/LanguageContext';
 
 export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <LanguageProvider>
-        <main>
-          <Controls />
+        <Header />
+        <main id="main">
           <Hero />
           <About />
           <Stack />

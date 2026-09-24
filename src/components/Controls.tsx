@@ -1,87 +1,44 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, ArrowUp } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Moon, Sun } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+
+function initialTheme(): boolean {
+  try {
+    const saved = window.localStorage.getItem('portfolio-theme');
+    if (saved === 'dark' || saved === 'light') return saved === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  } catch { return false; }
+}
 
 export default function Controls() {
-  const [isDark, setIsDark] = useState(() => {
-    const savedTheme = localStorage.getItem('portfolio-theme');
-    if (savedTheme) return savedTheme === 'dark';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
-  const [showScrollTop, setShowScrollTop] = useState(false);
+  const { lang, setLanguage, t } = useLanguage();
+  const [isDark, setIsDark] = useState(initialTheme);
 
   useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', isDark);
     document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
-    localStorage.setItem('portfolio-theme', isDark ? 'dark' : 'light');
-    document.querySelector('meta[name="theme-color"]')?.setAttribute(
-      'content',
-      isDark ? '#10131a' : '#f7f8fb',
-    );
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isDark ? '#15191b' : '#f4f2ed');
+    try { window.localStorage.setItem('portfolio-theme', isDark ? 'dark' : 'light'); }
+    catch { /* Storage can be disabled by browser settings. */ }
   }, [isDark]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
-    };
-
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    const element = document.getElementById('hero');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
   return (
-    <motion.div 
-      initial={{ y: 100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, delay: 1, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed bottom-24 md:bottom-8 right-6 md:right-12 z-50 flex items-center gap-1.5 p-1.5 bg-surface/80 backdrop-blur-md border border-black/10 dark:border-white/10 rounded-full shadow-2xl"
-    >
-      <button 
+    <div className="header-controls">
+      <div className="language-switch" role="group" aria-label={lang === 'uk' ? 'Мова сайту' : 'Site language'}>
+        <button type="button" onClick={() => setLanguage('uk')} aria-pressed={lang === 'uk'}>UK</button>
+        <span aria-hidden="true">/</span>
+        <button type="button" onClick={() => setLanguage('en')} aria-pressed={lang === 'en'}>EN</button>
+      </div>
+      <span className="control-divider" aria-hidden="true" />
+      <button
         type="button"
-        onClick={() => setIsDark(!isDark)}
-        className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-primary"
-        aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+        className="theme-toggle"
+        onClick={() => setIsDark((value) => !value)}
+        aria-label={isDark ? t.themeLight : t.themeDark}
         aria-pressed={isDark}
       >
-        {isDark ? <Sun size={20} /> : <Moon size={20} />}
+        {isDark ? <Sun size={20} strokeWidth={1.7} aria-hidden="true" /> : <Moon size={20} strokeWidth={1.7} aria-hidden="true" />}
       </button>
-
-      <AnimatePresence>
-        {showScrollTop && (
-          <>
-            <motion.div 
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              className="w-[1px] h-6 bg-black/10 dark:bg-white/10"
-            />
-            <motion.button 
-              type="button"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              onClick={scrollToTop}
-              className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-primary"
-              aria-label="Scroll to top"
-            >
-              <ArrowUp size={20} />
-            </motion.button>
-          </>
-        )}
-      </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }

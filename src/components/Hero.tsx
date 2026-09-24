@@ -1,281 +1,48 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ArrowDown, ArrowUpRight, Menu, X } from 'lucide-react';
-import { useEffect, useState, type MouseEvent } from 'react';
+import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { ArrowDown, ArrowUpRight } from 'lucide-react';
+import { useRef, type PointerEvent } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-
-const easeOutExpo = [0.16, 1, 0.3, 1] as const;
-
-type SectionLinkProps = {
-  id: string;
-  label: string;
-  onNavigate: (event: MouseEvent<HTMLAnchorElement>, id: string) => void;
-};
-
-type MobileSectionLinkProps = SectionLinkProps & {
-  index: number;
-  reduceMotion: boolean | null;
-};
-
-function SectionLink({ id, label, onNavigate }: SectionLinkProps) {
-  return (
-    <a
-      href={`#${id}`}
-      onClick={(event) => onNavigate(event, id)}
-      className="relative text-sm font-medium text-primary/70 transition-colors duration-200 hover:text-primary focus-visible:text-primary"
-    >
-      {label}
-    </a>
-  );
-}
-
-function MobileSectionLink({ id, label, index, onNavigate, reduceMotion }: MobileSectionLinkProps) {
-  return (
-    <motion.a
-      href={`#${id}`}
-      onClick={(event) => onNavigate(event, id)}
-      initial={reduceMotion ? false : { opacity: 0, x: -12 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: reduceMotion ? 0.01 : 0.35, delay: reduceMotion ? 0 : 0.04 * index, ease: easeOutExpo }}
-      className="group grid grid-cols-[2rem_minmax(0,1fr)_1.5rem] items-center gap-3 rounded-xl px-4 py-4 transition-colors duration-200 hover:bg-primary/[0.045] focus-visible:bg-primary/[0.045]"
-    >
-      <span className="text-xs font-medium text-muted/70">{String(index + 1).padStart(2, '0')}</span>
-      <span className="font-display text-xl font-semibold tracking-[-0.045em] text-primary">{label}</span>
-      <ArrowUpRight
-        size={18}
-        strokeWidth={1.8}
-        className="justify-self-end text-muted transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent"
-        aria-hidden="true"
-      />
-    </motion.a>
-  );
-}
+import { ease, maskLine, stagger } from '../lib/motion';
 
 export default function Hero() {
-  const { lang, setLanguage, t } = useLanguage();
+  const { t } = useLanguage();
   const reduceMotion = useReducedMotion();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const mainY = useTransform(scrollYProgress, [0, 1], [0, -42]);
+  const asideY = useTransform(scrollYProgress, [0, 1], [0, 28]);
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const symbolX = useSpring(pointerX, { stiffness: 120, damping: 22 });
+  const symbolY = useSpring(pointerY, { stiffness: 120, damping: 22 });
 
-  useEffect(() => {
-    if (!isMenuOpen) return undefined;
+  function moveSymbol(event: PointerEvent<HTMLElement>) {
+    if (reduceMotion || event.pointerType !== 'mouse') return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    pointerX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 18);
+    pointerY.set(((event.clientY - bounds.top) / bounds.height - 0.5) * 18);
+  }
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [isMenuOpen]);
-
-  const scrollToSection = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
-    event.preventDefault();
-      document.getElementById(id)?.scrollIntoView({
-      behavior: reduceMotion ? 'auto' : 'smooth',
-      block: 'start',
-    });
-  };
-
-  const scrollFromMenu = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
-    setIsMenuOpen(false);
-    scrollToSection(event, id);
-  };
-
-  const reveal = (delay: number) => ({
-    initial: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: reduceMotion ? 0.01 : 0.72, delay, ease: easeOutExpo },
-  });
-
-  return (
-    <section
-      id="hero"
-      className="relative isolate flex min-h-[min(52rem,100svh)] w-full overflow-hidden bg-background px-5 sm:px-8 lg:px-12"
-    >
-      <div className="hero-backdrop pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
-      <div className="hero-backdrop-line pointer-events-none absolute inset-x-0 top-[5.4rem] -z-10 sm:top-[5.75rem]" aria-hidden="true" />
-
-      <header className="absolute left-0 top-0 z-20 w-full px-5 pt-5 sm:px-8 sm:pt-7 lg:px-12">
-        <div className="mx-auto flex max-w-[76rem] items-center justify-between gap-4">
-          <a
-            href="#hero"
-            onClick={(event) => scrollToSection(event, 'hero')}
-            className="font-display text-xl font-bold tracking-[-0.07em] text-primary transition-opacity hover:opacity-65"
-            aria-label="Vasyl Lypka — home"
-          >
-            VL<span className="text-accent">.</span>
-          </a>
-
-          <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary navigation">
-            {t.nav.map((item) => (
-              <SectionLink key={item.id} {...item} onNavigate={scrollToSection} />
-            ))}
-          </nav>
-
-          <div className="flex shrink-0 items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/12 bg-surface text-primary transition-colors hover:bg-primary/[0.04] lg:hidden"
-              aria-label={lang === 'uk' ? (isMenuOpen ? 'Закрити меню' : 'Відкрити меню') : (isMenuOpen ? 'Close menu' : 'Open menu')}
-              aria-controls="mobile-navigation"
-              aria-expanded={isMenuOpen}
-            >
-              {isMenuOpen ? <X size={19} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
-            </button>
-
-            <motion.div
-              initial={reduceMotion ? false : { opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduceMotion ? 0.01 : 0.55, delay: 0.12, ease: easeOutExpo }}
-              className="inline-flex items-center rounded-full border border-primary/12 bg-surface p-1 shadow-[0_10px_30px_rgb(15_23_42_/_0.06)]"
-              role="group"
-              aria-label="Language selector"
-            >
-              <button
-                type="button"
-                onClick={() => setLanguage('uk')}
-                aria-pressed={lang === 'uk'}
-                className={`min-h-9 rounded-full px-3 text-[11px] font-semibold transition-colors duration-200 ${
-                  lang === 'uk' ? 'bg-primary text-background' : 'text-primary/60 hover:text-primary'
-                }`}
-              >
-                UK
-              </button>
-              <button
-                type="button"
-                onClick={() => setLanguage('en')}
-                aria-pressed={lang === 'en'}
-                className={`min-h-9 rounded-full px-3 text-[11px] font-semibold transition-colors duration-200 ${
-                  lang === 'en' ? 'bg-primary text-background' : 'text-primary/60 hover:text-primary'
-                }`}
-              >
-                EN
-              </button>
-            </motion.div>
-          </div>
-        </div>
-
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -14, scale: 0.985 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -10, scale: 0.985 }}
-              transition={{ duration: reduceMotion ? 0.01 : 0.28, ease: easeOutExpo }}
-              className="mx-auto mt-4 max-w-[76rem] rounded-2xl border border-primary/10 bg-surface p-2 shadow-[0_20px_55px_rgb(15_23_42_/_0.12)] lg:hidden"
-            >
-              <nav id="mobile-navigation" className="divide-y divide-primary/10" aria-label="Primary navigation">
-                {t.nav.map((item, index) => (
-                  <MobileSectionLink
-                    key={item.id}
-                    {...item}
-                    index={index}
-                    reduceMotion={reduceMotion}
-                    onNavigate={scrollFromMenu}
-                  />
-                ))}
-              </nav>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </header>
-
-      <div className="relative z-10 mx-auto grid w-full max-w-[76rem] grid-cols-1 items-end gap-10 pb-16 pt-32 sm:gap-12 sm:pb-20 sm:pt-36 lg:grid-cols-[minmax(0,1fr)_15.5rem] lg:gap-16 lg:pb-24 lg:pt-32">
-        <div className="min-w-0">
-          <motion.p
-            {...reveal(0.16)}
-            className="mb-7 max-w-xl text-sm leading-relaxed text-muted sm:mb-9 sm:text-base"
-          >
-            {t.hero.subtitle}
-          </motion.p>
-
-          <h1 className="max-w-[9.5ch] font-display text-[clamp(3rem,8.4vw,7.5rem)] font-bold leading-[0.84] tracking-[-0.075em] text-primary">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span key={`${lang}-title`} className="block" {...reveal(0.24)}>
-                <span className="block overflow-hidden pb-[0.08em]">
-                  <motion.span
-                    initial={reduceMotion ? false : { y: '102%' }}
-                    animate={{ y: 0 }}
-                    transition={{ duration: reduceMotion ? 0.01 : 0.85, delay: 0.24, ease: easeOutExpo }}
-                    className="block"
-                  >
-                    {t.hero.title1}
-                  </motion.span>
-                </span>
-                <span className="block overflow-hidden pb-[0.08em] text-primary/62">
-                  <motion.span
-                    initial={reduceMotion ? false : { y: '102%' }}
-                    animate={{ y: 0 }}
-                    transition={{ duration: reduceMotion ? 0.01 : 0.85, delay: 0.34, ease: easeOutExpo }}
-                    className="block"
-                  >
-                    {t.hero.title2}
-                  </motion.span>
-                </span>
-              </motion.span>
-            </AnimatePresence>
-          </h1>
-
-          <motion.div {...reveal(0.56)} className="mt-9 flex flex-wrap items-center gap-3 sm:mt-11 sm:gap-4">
-            <a
-              href="#work"
-              onClick={(event) => scrollToSection(event, 'work')}
-              className="group inline-flex min-h-12 items-center gap-3 rounded-full bg-primary px-5 text-sm font-semibold text-background transition-transform duration-200 hover:-translate-y-0.5 focus-visible:-translate-y-0.5"
-            >
-              {t.nav[2].label}
-              <ArrowDown size={16} strokeWidth={2} className="transition-transform duration-200 group-hover:translate-y-0.5" aria-hidden="true" />
-            </a>
-            <a
-              href="#contact"
-              onClick={(event) => scrollToSection(event, 'contact')}
-              className="group inline-flex min-h-12 items-center gap-3 rounded-full border border-primary/18 px-5 text-sm font-semibold text-primary transition-colors duration-200 hover:border-primary/45 hover:bg-primary/[0.035]"
-            >
-              {t.contact.btn}
-              <ArrowUpRight size={16} strokeWidth={2} className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
-            </a>
-          </motion.div>
-        </div>
-
-        <motion.a
-          href="#contact"
-          onClick={(event) => scrollToSection(event, 'contact')}
-          initial={reduceMotion ? false : { opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: reduceMotion ? 0.01 : 0.78, delay: 0.55, ease: easeOutExpo }}
-          whileHover={reduceMotion ? undefined : { y: -5 }}
-          className="hero-availability group relative block overflow-hidden rounded-2xl border border-primary/12 p-6 text-left transition-[border-color,box-shadow] duration-300 hover:border-accent/55 focus-visible:border-accent sm:max-w-sm lg:mb-2 lg:max-w-none"
-          aria-label={`${t.hero.available1} ${t.hero.available2}. Go to contact section.`}
-        >
-          <motion.span
-            initial={reduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: reduceMotion ? 0.01 : 0.82, delay: 0.92, ease: easeOutExpo }}
-            className="absolute left-0 top-0 h-0.5 w-full origin-left bg-accent"
-            aria-hidden="true"
-          />
-          <span className="mb-7 flex items-center gap-2 text-xs font-semibold text-muted">
-            <span className="hero-availability-dot h-2 w-2 rounded-full bg-accent" aria-hidden="true" />
-            {t.hero.available1}
-          </span>
-          <span className="block font-display text-3xl font-semibold leading-[0.95] tracking-[-0.06em] text-primary">
-            {t.hero.available2}
-          </span>
-          <span className="mt-8 block border-t border-primary/10 pt-4 text-xs leading-relaxed text-muted">
-            React&nbsp;&nbsp;·&nbsp;&nbsp;TypeScript&nbsp;&nbsp;·&nbsp;&nbsp;Motion
-          </span>
-        </motion.a>
-      </div>
-
-      <motion.a
-        href="#about"
-        onClick={(event) => scrollToSection(event, 'about')}
-        initial={reduceMotion ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: reduceMotion ? 0.01 : 0.55, delay: 1.05 }}
-        className="absolute bottom-7 left-5 z-10 inline-flex items-center gap-2 text-xs font-medium text-muted transition-colors hover:text-primary sm:bottom-9 sm:left-8 lg:left-12"
-      >
-        {t.hero.scroll}
-        <ArrowDown size={15} strokeWidth={2} aria-hidden="true" />
-      </motion.a>
-    </section>
-  );
+  return <section id="hero" ref={heroRef} className="hero-section">
+    <div className="site-width hero-layout">
+      <motion.div className="hero-main" style={{ y: reduceMotion ? 0 : mainY }}>
+        <motion.p className="hero-intro mono" initial={reduceMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>{t.hero.intro}</motion.p>
+        <motion.h1 className="hero-title" variants={stagger} initial={reduceMotion ? false : 'hidden'} animate="visible">
+          {[t.hero.line1, t.hero.line2].map((line) => <span className="title-mask" key={line}><motion.span variants={reduceMotion ? undefined : maskLine}>{line}</motion.span></span>)}
+        </motion.h1>
+        <motion.p className="hero-description" initial={reduceMotion ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.45, ease }}>{t.hero.body}</motion.p>
+        <motion.div className="hero-actions" initial={reduceMotion ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.55, ease }}>
+          <a className="button button-primary" href="#work">{t.hero.viewWork}<ArrowUpRight size={19} aria-hidden="true" /></a>
+          <a className="button button-outline" href="#contact">{t.hero.contact}<ArrowUpRight size={19} aria-hidden="true" /></a>
+        </motion.div>
+      </motion.div>
+      <motion.aside className="hero-aside" style={{ y: reduceMotion ? 0 : asideY }} initial={reduceMotion ? false : { opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 0.55, ease }} aria-label={t.hero.craft} onPointerMove={moveSymbol} onPointerLeave={() => { pointerX.set(0); pointerY.set(0); }}>
+        <div className="aside-top mono"><span>01 / 04</span><span>{t.hero.craft}</span></div>
+        <motion.div className="hero-symbol" style={{ x: symbolX, y: symbolY }} aria-hidden="true"><span className="symbol-angle">&lt;</span><span className="symbol-v">V</span><span className="symbol-l">L</span><span className="symbol-slash">/</span><span className="symbol-dot" /><span className="symbol-angle right">&gt;</span></motion.div>
+        <div className="aside-bottom mono"><span>React<br />TypeScript<br />Motion</span><span>{t.hero.availability}</span></div>
+      </motion.aside>
+      <a className="hero-scroll mono" href="#about"><ArrowDown size={19} aria-hidden="true" />{t.hero.scroll}</a>
+    </div>
+    <div className="hero-next" aria-hidden="true"><div className="site-width"><span>01</span><span>{t.nav[0].label}</span><ArrowDown size={20} /></div></div>
+  </section>;
 }

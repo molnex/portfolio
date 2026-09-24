@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: 'class', 
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -8,15 +8,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: 'var(--background)',
+        background: 'var(--bg)',
         surface: 'var(--surface)',
-        primary: 'var(--primary)',
+        primary: 'var(--ink)',
         muted: 'var(--muted)',
         accent: 'var(--accent)',
       },
       fontFamily: {
-        sans: ['-apple-system', 'BlinkMacSystemFont', 'San Francisco', 'Helvetica Neue', 'sans-serif'],
-        display: ['SF Pro Display', '-apple-system', 'Helvetica Neue', 'sans-serif'],
+        sans: ['Manrope', 'Arial', 'sans-serif'],
+        display: ['Oswald', 'Arial Narrow', 'sans-serif'],
+        mono: ['IBM Plex Mono', 'Consolas', 'monospace'],
       },
       letterSpacing: {
         tighter: '-.04em',
